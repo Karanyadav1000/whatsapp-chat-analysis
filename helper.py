@@ -79,16 +79,20 @@ def most_common_words(selected_user,df):
     most_common_df = pd.DataFrame(Counter(words).most_common(20))
     return most_common_df
 
-ddef emoji_helper(selected_user, df):
+def emoji_helper(selected_user, df):
+
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
 
     emojis = []
 
-    for message in df['message']:
-        emojis.extend([c for c in message if emoji.is_emoji(c)])
+    for message in df['message'].dropna():
+        emojis.extend([c for c in str(message) if emoji.is_emoji(c)])
 
-    emoji_df = pd.DataFrame(Counter(emojis).most_common(), columns=['emoji', 'count'])
+    emoji_df = pd.DataFrame(
+        Counter(emojis).most_common(),
+        columns=['emoji', 'count']
+    )
 
     return emoji_df
 
